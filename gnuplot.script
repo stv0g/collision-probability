@@ -1,0 +1,45 @@
+#reset
+#set term gif animate
+#set output "animate.gif"
+
+
+unset key
+set size ratio -1
+s = 0.4
+
+samples = `egrep -v ^# samples.dat | wc -l`
+collisions = `egrep ^1 samples.dat | wc -l`
+
+do for [tt=1:10] {
+  system "./collision_probabilty > samples.dat"
+  reread
+  
+  do for [pp=1:1] {
+    do for [ii=1:collisions-1] {
+      plot \
+        "samples.dat"            using 2:3 t "Vehicle"                                                lc rgb "red"  lt 7, \
+        "samples.dat"            using 5:6 t "Obstacle"                                               lc rgb "blue" lt 7, \
+        "samples.dat"            using 2:3:(s*cos($4)):(s*sin($4))                with vectors nohead lc rgb "red", \
+        "samples.dat"            using 5:6:(s*cos($7)):(s*sin($7))                with vectors nohead lc rgb "blue", \
+        "< egrep ^1 samples.dat" using 2:3:($5-$2):($6-$3)         every ::ii::ii with vectors nohead lw 2 lc rgb "green" t "Collisions", \
+        \
+        "< egrep ^1 samples.dat" using 8:9:($10-$8):($11-$9)       every ::ii::ii with vectors nohead lw 2 lc rgb "black", \
+        "< egrep ^1 samples.dat" using 10:11:($12-$10):($13-$11)   every ::ii::ii with vectors nohead lw 2 lc rgb "black", \
+        "< egrep ^1 samples.dat" using 12:13:($14-$12):($15-$13)   every ::ii::ii with vectors nohead lw 2 lc rgb "black", \
+        "< egrep ^1 samples.dat" using 14:15:($8-$14):($9-$15)     every ::ii::ii with vectors nohead lw 2 lc rgb "black", \
+        \
+        "< egrep ^1 samples.dat" using 16:17:($18-$16):($19-$17)   every ::ii::ii with vectors nohead lw 2 lc rgb "black", \
+        "< egrep ^1 samples.dat" using 18:19:($20-$18):($21-$19)   every ::ii::ii with vectors nohead lw 2 lc rgb "black", \
+        "< egrep ^1 samples.dat" using 20:21:($22-$20):($23-$21)   every ::ii::ii with vectors nohead lw 2 lc rgb "black", \
+        "< egrep ^1 samples.dat" using 22:23:($16-$22):($17-$23)   every ::ii::ii with vectors nohead lw 2 lc rgb "black"
+        
+        unset label 1
+        unset label 2
+        unset label 3
+        set label 1 "Total Samples = " . samples at graph 0.1,0.1
+        set label 2 "Total Collisions = " . collisions at graph 0.1,0.15
+        set label 3 "Showing Collision = " . ii at graph 0.1,0.2
+    }
+  }
+}
+set output

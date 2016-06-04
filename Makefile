@@ -1,8 +1,8 @@
 CXX = clang++
 
-CXXFLAGS = -I/opt/local/include/eigen3/	
+CXXFLAGS = -I/opt/local/include/eigen3/
 
-.PHONY: plot all
+.PHONY: plot all clean
 
 all: collision_probabilty
 
@@ -14,3 +14,7 @@ samples.dat: collision_probabilty
 	
 plot: samples.dat
 	gnuplot -c gnuplot.script
+
+clean:
+	rm -f collision_probability
+	rm -f samples.dat

@@ -22,7 +22,7 @@ typedef bool(*CollisionFunction)(const Vector3d &a, const Vector3d &b);
 class MultivariateNormalDistribution : normal_distribution<double> {
 
 protected:
-	mt19937 gen;
+	mt19937 &gen;
 	
 	Matrix<double, Dynamic, Dynamic> covar;
 	Matrix<double, Dynamic, Dynamic> transform;
@@ -32,7 +32,7 @@ protected:
 	
 
 public:
-	MultivariateNormalDistribution(const Matrix<double, Dynamic, 1> &m, const Matrix<double, Dynamic, Dynamic> &c, const mt19937 &g) :
+	MultivariateNormalDistribution(const Matrix<double, Dynamic, 1> &m, const Matrix<double, Dynamic, Dynamic> &c, mt19937 &g) :
 		gen(g),
 		mean(m),
 		covar(c),

@@ -127,7 +127,7 @@ bool collision_circle(const Vector3d &vehicle, const Vector3d &obstacle)
 	
 	Vector3d delta = vehicle - obstacle;
 
-	return delta.norm() < minDistance; /* Collision occured if distance (r) is smaller than 1 */
+	return delta.head(2).norm() < minDistance; /* Collision occured if distance (r) is smaller than 1 */
 }
 
 double collision_probability(CollisionFunction cfunc, MultivariateNormalDistribution &vehicle, MultivariateNormalDistribution &obstacle)
